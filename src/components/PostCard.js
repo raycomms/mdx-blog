@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
             <span>by {author}</span> /<span>{date}</span>
           </h6>
           <p>{post.excerpt}</p>
-          <Link to={`/${slug}`} className={styles.link}>
+          <Link to={slug} className={styles.link}>
             read more
           </Link>
         </div>

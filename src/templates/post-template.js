@@ -9,7 +9,7 @@ const postTemplate = ({ data, pageContext }) => {
   const { body } = data.mdx
   const { previous, next } = pageContext;
   const img = image.childImageSharp.fluid;
-
+  console.log(pageContext)
   return (
     <Layout>
       <section className={styles.template}>
@@ -26,13 +26,12 @@ const postTemplate = ({ data, pageContext }) => {
         <div className={styles.content}>
           <MDXRenderer>{body}</MDXRenderer>
         </div>
-        <ul className={styles.links}
-        >
+        <ul className={styles.links}>
           {previous === false ? null : (
             <li>
               {previous && (
-                <Link to={`/${previous.node.frontmatter.slug}`} className={styles.link}>
-                  <span role="img" aria-label="arrow-up">⬆️</span> {previous.node.frontmatter.title}
+                <Link to={previous.node.frontmatter.slug} className={styles.link}>
+                  <span role="img" aria-label="arrow-down">⬇️</span> {previous.node.frontmatter.title}
                 </Link>
               )}
             </li>
@@ -40,8 +39,8 @@ const postTemplate = ({ data, pageContext }) => {
           {next === false ? null : (
             <li>
               {next && (
-                <Link to={`/${next.node.frontmatter.slug}`} className={styles.link}>
-                  {next.node.frontmatter.title} <span role="img" aria-label="arrow-down">⬇️</span>
+                <Link to={next.node.frontmatter.slug} className={styles.link}>
+                  {next.node.frontmatter.title} <span role="img" aria-label="arrow-up">⬆️</span>
                 </Link>
               )}
             </li>
