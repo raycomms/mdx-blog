@@ -1,12 +1,13 @@
-exports.createPages = async ({ actions, graphql }) => {
+const path = require("path")
+const slugify = require("slugify")
+
+exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
-  const {
-    data: {
-      allMdx: { edges: posts },
-    },
-  } = await graphql(`
+  const postTemplate = path.resolve("src/templates/post-template.js")
+  const tagTemplate = path.resolve("src/templates/tag-template.js")
+  const result = await graphql(`
   {
-    allMdx(sort: {fields: frontmatter___date, order: DESC}) {
+    allMdx(sort: {fields: frontmatter___date, order: DESC}, limit: 2000) {
       edges {
         node {
           frontmatter {
@@ -14,25 +15,48 @@ exports.createPages = async ({ actions, graphql }) => {
             slug
             date(formatString: "MMMM Do, YYYY")
             author
+            tags
           }
           excerpt
         }
       }
+      group(field: frontmatter___tags) {
+        fieldValue
+        totalCount
+      }
     }
   }
-  
-  `)
-  posts.forEach(({ node }, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1];
-    const next = index === 0 ? null : posts[index - 1];
+`)
+  // handle errors
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query.`)
+    return
+  }
+  const posts = result.data.allMdx.edges
+  // Create blog posts pages.
+  posts.forEach((post, index) => {
+    const previous = index === posts.length - 1 ? null : posts[index + 1].node
+    const next = index === 0 ? null : posts[index - 1].node
 
     createPage({
-      path: node.frontmatter.slug,
-      component: require.resolve("./src/templates/post-template.js"),
+      path: post.node.frontmatter.slug,
+      component: postTemplate,
       context: {
-        slug: node.frontmatter.slug,
+        slug: post.node.frontmatter.slug,
         previous,
         next,
+      },
+    })
+  })
+  // Extract tag data from query
+  const tags = result.data.allMdx.group
+  // Make tag pages
+  tags.forEach(tag => {
+    createPage({
+      path: `/tags/${slugify(tag.fieldValue)}/`,
+      component: tagTemplate,
+      context: {
+        tag: tag.fieldValue,
       },
     })
   })

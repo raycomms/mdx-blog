@@ -1,11 +1,13 @@
 import React from "react"
 import styles from "../css/postTemplate.module.css"
+import slugify from "slugify"
 import { Link, graphql } from "gatsby"
 import Image from "gatsby-image"
 import Layout from "../components/layout"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 const postTemplate = ({ data, pageContext }) => {
   const { title, date, author, image } = data.mdx.frontmatter
+  const tags = data.mdx.frontmatter.tags || []
   const { body } = data.mdx
   const { previous, next } = pageContext;
   const img = image.childImageSharp.fluid;
@@ -30,8 +32,8 @@ const postTemplate = ({ data, pageContext }) => {
           {previous === false ? null : (
             <li>
               {previous && (
-                <Link to={previous.node.frontmatter.slug} className={styles.link}>
-                  <span role="img" aria-label="arrow-down">⬇️</span> {previous.node.frontmatter.title}
+                <Link to={previous.frontmatter.slug} className={styles.link}>
+                  <span role="img" aria-label="arrow-down">⬇️</span> {previous.frontmatter.title}
                 </Link>
               )}
             </li>
@@ -39,13 +41,31 @@ const postTemplate = ({ data, pageContext }) => {
           {next === false ? null : (
             <li>
               {next && (
-                <Link to={next.node.frontmatter.slug} className={styles.link}>
-                  {next.node.frontmatter.title} <span role="img" aria-label="arrow-up">⬆️</span>
+                <Link to={next.frontmatter.slug} className={styles.link}>
+                  {next.frontmatter.title} <span role="img" aria-label="arrow-up">⬆️</span>
                 </Link>
               )}
             </li>
           )}
         </ul>
+        <hr />
+        <div>
+          tags:
+  <ul
+            style={{
+              display: `flex`,
+              flexWrap: `wrap`,
+              justifyContent: `space-around`,
+              listStyle: `none`,
+            }}
+          >
+            {tags.map(t => (
+              <li key={slugify(t)}>
+                <Link to={`/tags/${slugify(t)}`}>{t}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
     </Layout>
   )
@@ -59,6 +79,7 @@ export const query = graphql`
         slug
         date(formatString: "MMMM Do, YYYY")
         author
+        tags
         image {
           childImageSharp {
             fluid {
