@@ -39,7 +39,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     const next = index === 0 ? null : posts[index - 1].node
 
     createPage({
-      path: post.node.frontmatter.slug,
+      path: `/${post.node.frontmatter.slug}`,
       component: postTemplate,
       context: {
         slug: post.node.frontmatter.slug,
@@ -53,7 +53,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   // Make tag pages
   tags.forEach(tag => {
     createPage({
-      path: `/tags/${slugify(tag.fieldValue)}/`,
+      path: `/tags/${slugify(tag.fieldValue)}`,
       component: tagTemplate,
       context: {
         tag: tag.fieldValue,
