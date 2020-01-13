@@ -1,9 +1,23 @@
+.gatsby-resp-image-wrapper {
+  display: block;
+  max-width: 100% !important;
+  margin: 2rem;
+}
+
 .template {
   width: 80vw;
   margin: 4rem auto;
   max-width: 750px;
   padding: 2rem;
   background: var(--mainWhite);
+}
+.template hr{
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #dfe2e5;
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
 }
 
 .links {
@@ -13,7 +27,10 @@
   list-style: none;
   padding: 0;
 }
-
+.pnlinks{
+  padding: 4px 8px;
+  display: inline-block;
+}
 .link {
   border: 1px solid var(--mainBlack);
   padding: 4px 8px;

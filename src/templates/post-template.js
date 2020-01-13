@@ -36,9 +36,9 @@ const postTemplate = ({ data, pageContext }) => {
             {previous === false ? null : (
               <li>
                 {previous && (
-                  <Link to={`/${previous.frontmatter.slug}`}>
+                  <Link to={`/${previous.frontmatter.slug}`} className={styles.pnlinks}>
                     <span role="img" aria-label="arrow-down">⬇️</span> {previous.frontmatter.title}
-                    <li>{previous.frontmatter.date}</li>
+                    <p>{previous.frontmatter.date}</p>
                   </Link>
                 )}
               </li>
@@ -46,9 +46,9 @@ const postTemplate = ({ data, pageContext }) => {
             {next === false ? null : (
               <li>
                 {next && (
-                  <Link to={`/${next.frontmatter.slug}`}>
+                  <Link to={`/${next.frontmatter.slug}`} className={styles.pnlinks}>
                     {next.frontmatter.title} <span role="img" aria-label="arrow-up">⬆️</span>
-                    <li>{next.frontmatter.date}</li>
+                    <p>{next.frontmatter.date}</p>
                   </Link>
                 )}
               </li>
